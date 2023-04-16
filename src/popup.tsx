@@ -3,29 +3,14 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 
 const Popup = () => {
-  const [count, setCount] = useState(0);
-  const [currentURL, setCurrentURL] = useState<string>();
-
-  useEffect(() => {
-    chrome.action.setBadgeText({ text: count.toString() });
-  }, [count]);
-
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      setCurrentURL(tabs[0].url);
-    });
-  }, []);
-  chrome.runtime.onMessage.addListener(async (message) => {
-    console.log(message);
+  chrome.runtime.onMessage.addListener(async () => {
     const profileUrl = "https://myanimelist.net/profile/oka1791";
     const results = await axios.get(profileUrl);
     const { data } = results;
     const tmp = document.createElement("div");
     tmp.innerHTML = data;
-    // console.log(tmp);
     let csrf_token;
     for (let i = 0; i < tmp.children.length; i++) {
-      //console.log(tmp.children[i]);
       if (
         tmp.children[i].tagName == "META" &&
         tmp.children[i].getAttribute("name") == "csrf_token"
@@ -51,11 +36,7 @@ const Popup = () => {
       });
   });
 
-  return (
-    <>
-      <h1>Test</h1>
-    </>
-  );
+  return <h1>Test</h1>;
 };
 
 ReactDOM.render(

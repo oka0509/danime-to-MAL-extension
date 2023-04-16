@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
 
 const Popup = () => {
   const [count, setCount] = useState(0);
@@ -14,41 +15,40 @@ const Popup = () => {
       setCurrentURL(tabs[0].url);
     });
   }, []);
-
-  const changeBackground = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tab = tabs[0];
-      if (tab.id) {
-        chrome.tabs.sendMessage(
-          tab.id,
-          {
-            color: "red",
-          },
-          (msg) => {
-            console.log("result message:", msg);
-          }
-        );
-      }
-    });
-  };
-
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log("got message");
+  chrome.runtime.onMessage.addListener(async (message) => {
+    console.log(message);
+    const profileUrl = "https://myanimelist.net/profile/oka1791";
+    const results = await axios.get(profileUrl);
+    const {data} = results;
+    const tmp = document.createElement("div");
+    tmp.innerHTML =  data;
+   // console.log(tmp);
+   let csrf_token;
+   for(let i = 0; i< tmp.children.length; i++) {
+    //console.log(tmp.children[i]);
+    if(tmp.children[i].tagName == "META" && 
+    tmp.children[i].getAttribute("name") == "csrf_token") {
+      csrf_token = tmp.children[i].getAttribute("content");
+      break;
+    }
+   }
+    const url = "https://myanimelist.net/ownlist/anime/edit.json";
+    axios.post(url, {
+      anime_id: 2167,
+      status: 1,
+      score: 0,
+      num_watched_episodes: 7,
+      csrf_token: csrf_token
+    }).then(() => {
+      console.log("OK");
+    }).catch((e) => {
+      console.log(e);
+    })
   });
 
   return (
     <>
-      <ul style={{ minWidth: "700px" }}>
-        <li>Current URL: {currentURL}</li>
-        <li>Current Time: {new Date().toLocaleTimeString()}</li>
-      </ul>
-      <button
-        onClick={() => setCount(count + 1)}
-        style={{ marginRight: "5px" }}
-      >
-        count up
-      </button>
-      <button onClick={changeBackground}>change background</button>
+    <h1>Test</h1>
     </>
   );
 };

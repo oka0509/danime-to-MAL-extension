@@ -32,6 +32,10 @@ const Popup = () => {
     });
   };
 
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log("got message");
+  });
+
   return (
     <>
       <ul style={{ minWidth: "700px" }}>

@@ -9,3 +9,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
   return true;
 });
+
+const video: HTMLElement = (document.getElementById("video") as HTMLElement);
+video.addEventListener("pause", () =>{
+  console.log("test");
+  chrome.runtime.sendMessage({message: "test"});
+})

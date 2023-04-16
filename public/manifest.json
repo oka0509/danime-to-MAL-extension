@@ -1,8 +1,8 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
 
-  "name": "Chrome Extension Sample",
-  "description": "Chrome Extension Sample",
+  "name": "danime-to-MAL-extension",
+  "description": "chrome-extension that sends stats of danime to MAL",
   "version": "1.0",
 
   "options_ui": {
@@ -17,13 +17,10 @@
   "content_scripts": [
       {
           "matches": ["<all_urls>"],
+          "run_at":"document_end",
           "js": ["js/vendor.js", "js/content_script.js"]
       }
   ],
-
-  "background": {
-    "service_worker": "js/background.js"
-  },
 
   "permissions": [
     "storage"

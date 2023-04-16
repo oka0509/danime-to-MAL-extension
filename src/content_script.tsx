@@ -1,9 +1,11 @@
-chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.color) {
-    console.log("Receive color = " + msg.color);
+   // document.body.style.backgroundColor = "red";
     document.body.style.backgroundColor = msg.color;
     sendResponse("Change color to " + msg.color);
   } else {
+  //  document.body.style.backgroundColor = "red";
     sendResponse("Color message is none.");
   }
+  return true;
 });

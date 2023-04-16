@@ -8,7 +8,9 @@
     "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
     "test": "npx jest",
-    "style": "prettier --write \"src/**/*.{ts,tsx}\""
+    "style": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "lint:prettier": "prettier --check src",
+    "fix:prettier": "prettier --write src"
   },
   "author": "",
   "license": "MIT",
@@ -29,7 +31,7 @@
     "copy-webpack-plugin": "^9.0.1",
     "glob": "^7.1.6",
     "jest": "^27.2.1",
-    "prettier": "^2.2.1",
+    "prettier": "^2.8.7",
     "rimraf": "^3.0.2 ",
     "ts-jest": "^27.0.5",
     "ts-loader": "^8.0.0",

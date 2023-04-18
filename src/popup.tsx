@@ -3,9 +3,7 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 
 const Popup = () => {
-  const getMALIdAndEpisodeNum = (dAnimeTitle: string, episodeNum: number) => {
-
-  }
+  const getMALIdAndEpisodeNum = (dAnimeTitle: string, episodeNum: number) => {};
   const updateMALStatus = async (animeId: number, episodeNum: number) => {
     const profileUrl = "https://myanimelist.net/profile/oka1791";
     const { data } = await axios.get(profileUrl);
@@ -36,7 +34,7 @@ const Popup = () => {
       .catch((e) => {
         console.log(e.message);
       });
-  }
+  };
 
   chrome.runtime.onMessage.addListener(async () => {
     updateMALStatus(2167, 7);

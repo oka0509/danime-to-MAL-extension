@@ -1,7 +1,12 @@
 const getMALIdAndEpisodeNum = async (
   dAnimeTitle: string,
   episodeNum: number
-) => {};
+) => {
+  const jikanUrl = `https://api.jikan.moe/v4/anime?q=${dAnimeTitle}`;
+  const data = (await (await fetch(jikanUrl)).json()).data;
+  console.log(data);
+  return { mal_id: data[0].mal_id, episodeNum: episodeNum };
+};
 const updateMALStatus = async (animeId: number, episodeNum: number) => {
   const profileUrl = "https://myanimelist.net/profile/oka1791";
   const data = await (await fetch(profileUrl)).text();
@@ -42,6 +47,9 @@ const updateMALStatus = async (animeId: number, episodeNum: number) => {
 
 chrome.runtime.onMessage.addListener(async (message) => {
   const { title, episodeNumber } = message;
-  //await getMALIdAndEpisodeNum(title, episodeNumber);
-  updateMALStatus(2167, 7);
+  const { mal_id, episodeNum } = await getMALIdAndEpisodeNum(
+    title,
+    episodeNumber
+  );
+  updateMALStatus(mal_id, episodeNum);
 });

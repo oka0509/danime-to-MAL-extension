@@ -3,9 +3,32 @@ const getMALIdAndEpisodeNum = async (
   episodeNum: number
 ) => {
   const jikanUrl = `https://api.jikan.moe/v4/anime?q=${dAnimeTitle}`;
-  const data = (await (await fetch(jikanUrl)).json()).data;
-  console.log(data);
-  return { mal_id: data[0].mal_id, episodeNum: episodeNum };
+  const data = (await (await fetch(jikanUrl)).json()).data[0];
+  // dアニメとMALで1対1になっていないことがある。
+  // (SPY×FAMILYだとdアニで春期と秋期の放送分が合わさっているが、
+  // MALで無印とPart2に分かれている)
+  // 話数を超えていたらsequelだとして差分の話数を登録する
+  if (episodeNum <= data.episodes) {
+    return { mal_id: data.mal_id as number, episodeNum: episodeNum };
+  } else {
+    const jikanFullInfoUrl = `https://api.jikan.moe/v4/anime/${data.mal_id}/full`;
+    const relations = (await (await fetch(jikanFullInfoUrl)).json()).data
+      .relations;
+    for (const relation of relations) {
+      if (relation.relation === "Sequel") {
+        const entries = relation.entry;
+        for (const entry of entries) {
+          if (entry.type === "anime") {
+            return {
+              mal_id: entry.mal_id as number,
+              episodeNum: episodeNum - data.episodes,
+            };
+          }
+        }
+      }
+    }
+    return undefined;
+  }
 };
 const updateMALStatus = async (animeId: number, episodeNum: number) => {
   const profileUrl = "https://myanimelist.net/profile/oka1791";
@@ -47,9 +70,11 @@ const updateMALStatus = async (animeId: number, episodeNum: number) => {
 
 chrome.runtime.onMessage.addListener(async (message) => {
   const { title, episodeNumber } = message;
-  const { mal_id, episodeNum } = await getMALIdAndEpisodeNum(
-    title,
-    episodeNumber
-  );
-  updateMALStatus(mal_id, episodeNum);
+  const res = await getMALIdAndEpisodeNum(title, episodeNumber);
+  if (res === undefined) {
+    alert("corresponding anime from MAL was not found.");
+    return;
+  } else {
+    updateMALStatus(res.mal_id, res.episodeNum);
+  }
 });

@@ -73,7 +73,6 @@ chrome.runtime.onMessage.addListener(async (message) => {
   const res = await getMALIdAndEpisodeNum(title, episodeNumber);
   if (res === undefined) {
     alert("corresponding anime from MAL was not found.");
-    return;
   } else {
     updateMALStatus(res.mal_id, res.episodeNum);
   }

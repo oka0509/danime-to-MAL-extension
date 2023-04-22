@@ -63,27 +63,30 @@ const updateMALStatus = async (animeId: number, episodeNum: number) => {
       break;
     }
   }
-  const postUrl = "https://myanimelist.net/ownlist/anime/edit.json";
-  const requestBody = {
-    anime_id: animeId,
-    status: 1,
-    score: 0,
-    num_watched_episodes: episodeNum,
-    csrf_token: csrf_token,
-  };
-  fetch(postUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then(() => {
-      console.log("stats successfully updated");
+  const postProcesses = ["add", "edit"];
+  for (const postProcess of postProcesses) {
+    const postUrl = `https://myanimelist.net/ownlist/anime/${postProcess}.json`;
+    const requestBody = {
+      anime_id: animeId,
+      status: 1,
+      score: 0,
+      num_watched_episodes: episodeNum,
+      csrf_token: csrf_token,
+    };
+    fetch(postUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
     })
-    .catch((e) => {
-      console.log(e.message);
-    });
+      .then(() => {
+        console.log("stats successfully updated");
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
+  }
 };
 
 chrome.runtime.onMessage.addListener(async (message) => {

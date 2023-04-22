@@ -1,60 +1,19 @@
-# Chrome Extension Sample
+# danime-to-MAL-extension
 
-Chrome Extension Sample
+dアニメの視聴結果をMALに自動で登録するChrome拡張
 
 ## Prerequisites
 
 - [node + npm](https://nodejs.org/) (Current Version)
 
-## Option
-
-- [Visual Studio Code](https://code.visualstudio.com/)
-
-## Includes the following
-
-- TypeScript
-- Webpack
-- React
-- Jest
-- Example Code
-  - Chrome Storage
-  - Options Version 2
-  - content script
-  - count up badge number
-  - background
-
 ## Setup
 
+1. 
 ```
+git clone git@github.com:oka0509/danime-to-MAL-extension.git
 npm install
-```
-
-## Import as Visual Studio Code project
-
-...
-
-## Build
-
-```
 npm run build
 ```
-
-## Build in watch mode
-
-### terminal
-
-```
-npm run watch
-```
-
-### Visual Studio Code
-
-Run watch mode.
-
-## Load extension to chrome
-
-Load `dist` directory
-
-## Test
-
-`npx jest` or `npm run test`
+2. 生成されたdistディレクトリを拡張機能の"パッケージ化されていない拡張機能を読み込む"から追加
+3. MALにあらかじめログインしておく
+4. popupからMALのユーザー名を登録

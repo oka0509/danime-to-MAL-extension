@@ -43,7 +43,12 @@ const Popup = () => {
       <form onSubmit={handleSubmit}>
         <label>
           MAL Username:
-          <input type="text" value={MALUsername} onChange={handleMALUsername} autoFocus/>
+          <input
+            type="text"
+            value={MALUsername}
+            onChange={handleMALUsername}
+            autoFocus
+          />
         </label>
         <input type="submit" value="Submit" />
       </form>

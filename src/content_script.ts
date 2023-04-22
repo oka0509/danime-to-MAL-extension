@@ -4,7 +4,7 @@ const replaceFullToHalf = (str: string) => {
     return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
   });
 };
-video.addEventListener("pause", () => {
+video.addEventListener("ended", () => {
   let Title = document.getElementsByClassName("pauseInfoTxt1")[0]
     .textContent as string;
   Title = replaceFullToHalf(Title);

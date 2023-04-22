@@ -30,8 +30,26 @@ const getMALIdAndEpisodeNum = async (
     return undefined;
   }
 };
+
+type userInfo = { MALUsername: string };
+const getSyncStorage = (key: string): Promise<userInfo> => {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(key, (item: any) => {
+      item.hasOwnProperty(key) ? resolve(item) : resolve({ MALUsername: "" });
+    });
+  });
+};
 const updateMALStatus = async (animeId: number, episodeNum: number) => {
-  const profileUrl = "https://myanimelist.net/profile/oka1791";
+  const { MALUsername } = await getSyncStorage("MALUsername");
+  if (MALUsername === "") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id as number, {
+        message: "MALのユーザー名が未登録です><　popupから登録をお願いします",
+      });
+    });
+    return;
+  }
+  const profileUrl = `https://myanimelist.net/profile/${MALUsername}`;
   const data = await (await fetch(profileUrl)).text();
   const metaTags = data.match(/<meta(?: .+?)?>/g) as RegExpMatchArray;
   let csrf_token;
@@ -72,7 +90,11 @@ chrome.runtime.onMessage.addListener(async (message) => {
   const { title, episodeNumber } = message;
   const res = await getMALIdAndEpisodeNum(title, episodeNumber);
   if (res === undefined) {
-    alert("corresponding anime from MAL was not found.");
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id as number, {
+        message: "MALの対応するアニメが見つかりませんでした><",
+      });
+    });
     return;
   }
   updateMALStatus(res.mal_id, res.episodeNum);

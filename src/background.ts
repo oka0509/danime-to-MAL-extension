@@ -19,7 +19,6 @@ const getMALIdAndEpisodeNum = async (
       return false;
     });
   }
-  console.log(data);
   // dアニメとMALで1対1になっていないことがある。
   // (SPY×FAMILYだとdアニで春期と秋期の放送分が合わさっているが、
   // MALで無印とPart2に分かれている)

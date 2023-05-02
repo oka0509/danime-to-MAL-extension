@@ -4,15 +4,14 @@ const getMALIdAndEpisodeNum = async (
 ) => {
   const jikanUrl = `https://api.jikan.moe/v4/anime?q=${dAnimeTitle}`;
   let data;
-  if(dAnimeTitle.includes("2期")) {
-    data = (await (await fetch(jikanUrl)).json()).data[0]
-  }
-  else {
+  if (dAnimeTitle.includes("2期")) {
+    data = (await (await fetch(jikanUrl)).json()).data[0];
+  } else {
     data = (await (await fetch(jikanUrl)).json()).data.find((element: any) => {
-      const {titles} = element;
-      for(const title of titles) {
-        if(title.type === "Default") {
-          if(!title.title.includes("Season 2")) {
+      const { titles } = element;
+      for (const title of titles) {
+        if (title.type === "Default") {
+          if (!title.title.includes("Season 2")) {
             return true;
           }
         }

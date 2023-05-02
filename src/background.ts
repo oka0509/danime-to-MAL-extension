@@ -3,7 +3,24 @@ const getMALIdAndEpisodeNum = async (
   episodeNum: number
 ) => {
   const jikanUrl = `https://api.jikan.moe/v4/anime?q=${dAnimeTitle}`;
-  const data = (await (await fetch(jikanUrl)).json()).data[0];
+  let data;
+  if(dAnimeTitle.includes("2期")) {
+    data = (await (await fetch(jikanUrl)).json()).data[0]
+  }
+  else {
+    data = (await (await fetch(jikanUrl)).json()).data.find((element: any) => {
+      const {titles} = element;
+      for(const title of titles) {
+        if(title.type === "Default") {
+          if(!title.title.includes("Season 2")) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+  }
+  console.log(data);
   // dアニメとMALで1対1になっていないことがある。
   // (SPY×FAMILYだとdアニで春期と秋期の放送分が合わさっているが、
   // MALで無印とPart2に分かれている)
